@@ -2,7 +2,8 @@ interface dia {
     dia: 'Lunes' | 'Martes' | 'Miercoles' | 'Jueves' | 'Viernes' | 'Sabado' | 'Domingo';
 }
 
-export interface curso {
+export interface Curso {
+    id: string;
     nombre: string;
     codigo: string;
     descripcion: string;

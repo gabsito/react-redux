@@ -2,18 +2,24 @@
 
 import * as React from 'react';
 import ListaCursos from './listaCursos';
-import { Button, Card, CardActions, CardContent, Modal, TextField } from '@mui/material';
+import { Alert, Button, Card, CardActions, CardContent, Modal, Snackbar, TextField } from '@mui/material';
 import { ToggleButtonGroup, ToggleButton, Box } from '@mui/material';
 import { TimePicker } from '@mui/x-date-pickers';
 import dayjs, { Dayjs } from 'dayjs';
 import saveCurso from '@/app/services/saveService';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { v4 as uuidv4 } from 'uuid';
+import validarCurso from '@/app/services/validator';
+import { RootState } from '@/app/redux/store';
 
 
 export default function CursosPage() {
 
   const dispatch = useDispatch();
+  const [alertSeverity, setAlertSeverity] = React.useState<'error' | 'warning' | 'info' | 'success'>('error');
+  const [alertMessage, setAlertMessage] = React.useState('');
   const [open, setOpen] = React.useState(false);
+  const [openAlert, setOpenAlert] = React.useState(false);
   const [nombre, setNombre] = React.useState('');
   const [codigo, setCodigo] = React.useState('');
   const [descripcion, setDescripcion] = React.useState('');
@@ -26,6 +32,8 @@ export default function CursosPage() {
     setOpen(false)
     cleanForm();
   };
+  const closeAlert = () => setOpenAlert(false);
+  const cursos = useSelector((state: RootState) => state.cursos.cursos);
 
   const cleanForm = () => {
     setNombre('');
@@ -38,8 +46,30 @@ export default function CursosPage() {
   };
 
   const handleSave = () => {
-    saveCurso(nombre, codigo, descripcion, dias, horarioInicio, horarioFin, parseInt(paralelo), dispatch);
+    let curso = {
+      id: uuidv4(),
+      nombre: nombre,
+      codigo: codigo,
+      descripcion: descripcion,
+      dias: dias,
+      horarioInicio: horarioInicio.format('HH:mm'),
+      horarioFin: horarioFin.format('HH:mm'),
+      paralelo: parseInt(paralelo)
+    };
+
+    let result = validarCurso(curso, cursos);
+    if (result.severity === 'error') {
+      setAlertSeverity('error');
+      setAlertMessage(result.message);
+      setOpenAlert(true);
+      return;
+    }
+
+    saveCurso(curso, dispatch);
     handleClose();
+    setAlertSeverity('success');
+    setAlertMessage(result.message);
+    setOpenAlert(true);
   };
 
   const cardStyle = {
@@ -104,6 +134,16 @@ export default function CursosPage() {
           </CardActions>
         </Card>
       </Modal>
+      <Snackbar open={openAlert} autoHideDuration={6000} onClose={closeAlert}>
+        <Alert
+          onClose={closeAlert}
+          severity={alertSeverity}
+          variant="filled"
+          sx={{ width: '100%' }}
+        >
+          {alertMessage}
+        </Alert>
+      </Snackbar>
     </div>
   );
 }

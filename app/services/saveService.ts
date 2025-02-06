@@ -1,8 +1,11 @@
+import { useDispatch } from "react-redux";
 import { Curso } from "../interfaces/curso";
 import { Estudiante } from "../interfaces/estudiante";
-import { useDispatch } from "react-redux";
+import { Inscripcion } from "../interfaces/inscripcion";
 import { agregarCurso } from "../redux/reducers/cursosSlice";
 import { agregarEstudiante } from "../redux/reducers/estudiantesSlice";
+import { agregarInscripcion } from "../redux/reducers/inscripcionesSlice";
+import { store } from "../redux/store";
 
 const saveCurso = (
     curso: Curso,
@@ -18,4 +21,15 @@ const saveEstudiante = (
     dispatch(agregarEstudiante(estudiante));
 }
 
-export { saveCurso, saveEstudiante };
+const saveInscripcion = (
+    inscripcion: Inscripcion,
+    dispatch: ReturnType<typeof useDispatch>
+) => {
+    dispatch(agregarInscripcion(inscripcion));
+}
+
+store.subscribe(() => {
+    localStorage.setItem('reduxState', JSON.stringify(store.getState()));
+});
+
+export { saveCurso, saveEstudiante, saveInscripcion };

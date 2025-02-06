@@ -9,7 +9,7 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 
 import theme from '../theme';
-import { Person, PersonAdd, School } from '@mui/icons-material';
+import { Person, School } from '@mui/icons-material';
 
 const NAVIGATION: Navigation = [
   {
@@ -26,11 +26,6 @@ const NAVIGATION: Navigation = [
     segment: 'cursos',
     title: 'Cursos',
     icon: <School />,
-  },
-  {
-    segment: 'inscripcion',
-    title: 'Inscripcion',
-    icon: <PersonAdd />,
   }
 ];
 

@@ -1,7 +1,6 @@
 import { Curso } from "../interfaces/curso";
 import { Estudiante } from "../interfaces/estudiante";
-import { Dayjs } from 'dayjs';
-
+import { Inscripcion } from "../interfaces/inscripcion";
 
 const validarCurso = (curso: Curso, cursos: Curso[]) => {
     if (curso.nombre === '' || curso.codigo === '' || curso.descripcion === '' || curso.dias.length === 0 || curso.horarioInicio === '' || curso.horarioFin === '' || curso.paralelo === 0) {
@@ -53,4 +52,51 @@ const validarEstudiante = (estudiante: Estudiante, estudiantes: Estudiante[]) =>
     };
 }
 
-export { validarCurso, validarEstudiante };
+const validarInscripcion = (inscripcion: Inscripcion, inscripciones: Inscripcion[], cursos: Curso[], estudiantes: Estudiante[]) => {
+    if (inscripcion.id === '' || inscripcion.id === '') {
+        return {
+            message: 'Todos los campos son obligatorios',
+            severity: 'error'
+        };
+    }
+    if (inscripciones.find(i => i.estudianteId === inscripcion.estudianteId && i.cursoId === inscripcion.cursoId)) {
+        return {
+            message: 'El estudiante ya esta inscrito en el curso',
+            severity: 'error'
+        };
+    }
+    // validar que el estudiante no este inscrito en otro curso en el mismo horario
+    let curso = cursos.find(c => c.id === inscripcion.cursoId);
+    if (curso === undefined) {
+        return {
+            message: 'Curso no encontrado',
+            severity: 'error'
+        };
+    }
+    let inscripcionesEstudiante = inscripciones.filter(i => i.estudianteId === inscripcion.estudianteId);
+    let horarioInicioCurso = parseInt(curso.horarioInicio.replace(':', ''));
+    let horarioFinCurso = parseInt(curso.horarioFin.replace(':', ''));
+    for (let i of inscripcionesEstudiante) {
+        let c = cursos.find(c => c.id === i.cursoId);
+        let horarioInicio = parseInt(c!.horarioInicio.replace(':', ''));
+        let horarioFin = parseInt(c!.horarioFin.replace(':', ''));
+        if (horarioInicioCurso >= horarioInicio && horarioInicioCurso <= horarioFin) {
+            return {
+                message: 'El estudiante esta inscrito en otro curso en el mismo horario',
+                severity: 'error'
+            };
+        }
+        if (horarioFinCurso >= horarioInicio && horarioFinCurso <= horarioFin) {
+            return {
+                message: 'El estudiante esta inscrito en otro curso en el mismo horario',
+                severity: 'error'
+            };
+        }
+    }
+    return {
+        message: 'El estudiante ha sido inscrito con exito',
+        severity: 'success'
+    };
+}
+
+export { validarCurso, validarEstudiante, validarInscripcion };

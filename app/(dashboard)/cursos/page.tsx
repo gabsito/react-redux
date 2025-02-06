@@ -6,11 +6,12 @@ import { Alert, Button, Card, CardActions, CardContent, Modal, Snackbar, TextFie
 import { ToggleButtonGroup, ToggleButton, Box } from '@mui/material';
 import { TimePicker } from '@mui/x-date-pickers';
 import dayjs, { Dayjs } from 'dayjs';
-import saveCurso from '@/app/services/saveService';
+import { saveCurso } from '@/app/services/saveService';
 import { useDispatch, useSelector } from 'react-redux';
 import { v4 as uuidv4 } from 'uuid';
-import validarCurso from '@/app/services/validator';
+import { validarCurso } from '@/app/services/validator';
 import { RootState } from '@/app/redux/store';
+import { cardStyle, actionStyle, contentStyle } from '@/app/styles/globals';
 
 
 export default function CursosPage() {
@@ -72,29 +73,6 @@ export default function CursosPage() {
     setOpenAlert(true);
   };
 
-  const cardStyle = {
-    position: 'absolute',
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
-    width: 500,
-    bgcolor: 'background.paper',
-    boxShadow: 24,
-    p: 1,
-  };
-
-  const contentStyle = {
-    display: 'flex',
-    flexDirection: 'column',
-    gap: '1rem',
-  };
-
-  const actionStyle = {
-    display: 'flex',
-    justifyContent: 'flex-end',
-    p: 2,
-  };
-
   return (
     <div>
       <Button onClick={handleOpen} variant='contained'>Crear Curso</Button>
@@ -129,7 +107,7 @@ export default function CursosPage() {
 
           </CardContent>
           <CardActions sx={actionStyle}>
-            <Button onClick={handleClose}>Cerrar</Button>
+            <Button onClick={handleClose}>Cancelar</Button>
             <Button onClick={handleSave} variant='contained'>Guardar</Button>
           </CardActions>
         </Card>

@@ -1,7 +1,8 @@
 import { Curso } from "../interfaces/curso";
-import { Dayjs } from 'dayjs';
+import { Estudiante } from "../interfaces/estudiante";
 import { useDispatch } from "react-redux";
 import { agregarCurso } from "../redux/reducers/cursosSlice";
+import { agregarEstudiante } from "../redux/reducers/estudiantesSlice";
 
 const saveCurso = (
     curso: Curso,
@@ -10,4 +11,11 @@ const saveCurso = (
     dispatch(agregarCurso(curso));
 };
 
-export default saveCurso;
+const saveEstudiante = (
+    estudiante: Estudiante,
+    dispatch: ReturnType<typeof useDispatch>
+) => {
+    dispatch(agregarEstudiante(estudiante));
+}
+
+export { saveCurso, saveEstudiante };

@@ -34,4 +34,23 @@ const validarCurso = (curso: Curso, cursos: Curso[]) => {
     };
 }
 
-export default validarCurso;
+const validarEstudiante = (estudiante: Estudiante, estudiantes: Estudiante[]) => {
+    if (estudiante.nombre === '' || estudiante.matricula === '') {
+        return {
+            message: 'Todos los campos son obligatorios',
+            severity: 'error'
+        };
+    }
+    if (estudiantes.find(e => e.matricula === estudiante.matricula)) {
+        return {
+            message: 'Ya existe un estudiante con la misma matricula',
+            severity: 'error'
+        };
+    }
+    return {
+        message: 'Estudiante valido',
+        severity: 'success'
+    };
+}
+
+export { validarCurso, validarEstudiante };

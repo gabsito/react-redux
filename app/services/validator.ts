@@ -59,13 +59,18 @@ const validarInscripcion = (inscripcion: Inscripcion, inscripciones: Inscripcion
             severity: 'error'
         };
     }
+    if (estudiantes.find(e => e.id === inscripcion.estudianteId) === undefined) {
+        return {
+            message: 'Estudiante no encontrado',
+            severity: 'error'
+        };
+    }
     if (inscripciones.find(i => i.estudianteId === inscripcion.estudianteId && i.cursoId === inscripcion.cursoId)) {
         return {
             message: 'El estudiante ya esta inscrito en el curso',
             severity: 'error'
         };
     }
-    // validar que el estudiante no este inscrito en otro curso en el mismo horario
     let curso = cursos.find(c => c.id === inscripcion.cursoId);
     if (curso === undefined) {
         return {
@@ -80,6 +85,12 @@ const validarInscripcion = (inscripcion: Inscripcion, inscripciones: Inscripcion
         let c = cursos.find(c => c.id === i.cursoId);
         let horarioInicio = parseInt(c!.horarioInicio.replace(':', ''));
         let horarioFin = parseInt(c!.horarioFin.replace(':', ''));
+        if (curso.codigo === c!.codigo) {
+            return {
+                message: 'El estudiante esta inscrito en otro paralelo del mismo curso',
+                severity: 'error'
+            };
+        }
         if (horarioInicioCurso >= horarioInicio && horarioInicioCurso <= horarioFin) {
             return {
                 message: 'El estudiante esta inscrito en otro curso en el mismo horario',

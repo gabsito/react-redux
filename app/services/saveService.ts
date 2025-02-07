@@ -4,7 +4,7 @@ import { Estudiante } from "../interfaces/estudiante";
 import { Inscripcion } from "../interfaces/inscripcion";
 import { agregarCurso } from "../redux/reducers/cursosSlice";
 import { agregarEstudiante } from "../redux/reducers/estudiantesSlice";
-import { agregarInscripcion } from "../redux/reducers/inscripcionesSlice";
+import { agregarInscripcion, eliminarInscripcion } from "../redux/reducers/inscripcionesSlice";
 import { store } from "../redux/store";
 
 const saveCurso = (
@@ -28,8 +28,16 @@ const saveInscripcion = (
     dispatch(agregarInscripcion(inscripcion));
 }
 
+const quitarInscripcion = (
+    inscripcionId: string,
+    dispatch: ReturnType<typeof useDispatch>
+) => {
+    if (inscripcionId === '') return;
+    dispatch(eliminarInscripcion(inscripcionId));
+}
+
 store.subscribe(() => {
     localStorage.setItem('reduxState', JSON.stringify(store.getState()));
 });
 
-export { saveCurso, saveEstudiante, saveInscripcion };
+export { saveCurso, saveEstudiante, saveInscripcion, quitarInscripcion };
